@@ -2,6 +2,24 @@
 #include "Card.h"
 #include "Game.h"
 
+void Player::Show(const std::unique_ptr<Player>& player)
+{
+	bool start = true;
+	for (auto& card : m_cards)
+		if (card)
+		{
+			if (start)
+				start = false;
+			else
+				std::cout << ", ";
+			if (this == player.get())
+				card->ShowPrivate();
+			else
+				card->ShowPublic();
+		}
+	std::cout << std::endl;
+}
+
 int Player::GetTotal()
 {
 	std::vector<std::unique_ptr<Card>&> pending;
@@ -14,7 +32,7 @@ int Player::GetTotal()
 		else
 			total += point;
 	}
-	int i = pending.size();
+	size_t i = pending.size();
 	for (auto& card : pending)
 	{
 		if (total + 11 > Game::BUST_POINT && --i <= 0)
@@ -40,6 +58,11 @@ bool DealerPlayer::ChooseHit()
 	return GetTotal() <= 16;
 }
 
+bool DealerPlayer::IsDealer()
+{
+	return true;
+}
+
 std::string NormalPlayer::GetName()
 {
 	return name;
@@ -62,4 +85,9 @@ bool NormalPlayer::ChooseHit()
 			return false;
 		}
 	}
+}
+
+bool NormalPlayer::IsDealer()
+{
+	return false;
 }

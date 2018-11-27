@@ -13,6 +13,7 @@ public:
 private:
 	int suit;			// マーク
 	int rank;			// ランク
+	bool is_private;	// 裏向きか
 
 public:
 	Card(int suit, int rank);
@@ -20,7 +21,9 @@ public:
 	~Card() = default;
 
 public:
-	void ShowCard();				// 表示
+	void ShowPublic();				// 一般表示
+	void ShowPrivate();				// 持ち主の表示
 	int GetPoint();					// ポイント(カードの価値)を取得
+	void SetPrivate(bool hidden);	// 表向きにするか
 };
 

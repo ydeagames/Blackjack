@@ -14,7 +14,7 @@ public:
 public:
 	void Create();
 	void Shuffle();
-	void ShowTrump();
+	void Show();
 	std::unique_ptr<Card> DrawCard();
 };
 

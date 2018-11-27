@@ -7,6 +7,7 @@ const std::string Card::ranks[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9",
 Card::Card(int suit, int rank)
 	: suit(suit)
 	, rank(rank)
+	, is_private(false)
 {
 }
 
@@ -15,7 +16,15 @@ Card::Card(int id)
 {
 }
 
-void Card::ShowCard()
+void Card::ShowPublic()
+{
+	if (is_private)
+		std::cout << "?";
+	else
+		std::cout << suits[suit] << ranks[rank];
+}
+
+void Card::ShowPrivate()
 {
 	std::cout << suits[suit] << ranks[rank];
 }
@@ -27,4 +36,9 @@ int Card::GetPoint()
 		return 10;
 	else if (rank == 0)	// A ‚Í1‚©11ƒ|ƒCƒ“ƒg
 		return -1;		// Œˆ’è‚³‚ê‚Ä‚¢‚È‚¢
+}
+
+void Card::SetPrivate(bool hidden)
+{
+	is_private = hidden;
 }

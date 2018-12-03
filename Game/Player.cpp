@@ -4,38 +4,37 @@
 
 void Player::Show(const std::unique_ptr<Player>& player)
 {
-	bool start = true;
-	for (auto& card : m_cards)
-		if (card)
-		{
-			if (start)
-				start = false;
-			else
-				std::cout << ", ";
-			if (this == player.get())
-				card->ShowPrivate();
-			else
-				card->ShowPublic();
-		}
-	std::cout << std::endl;
+	//bool start = true;
+	//for (auto& card : m_cards)
+	//	if (card)
+	//	{
+	//		if (start)
+	//			start = false;
+	//		else
+	//			std::cout << ", ";
+	//		if (this == player.get())
+	//			card->ShowPrivate();
+	//		else
+	//			card->ShowPublic();
+	//	}
+	//std::cout << std::endl;
 }
 
 int Player::GetTotal()
 {
-	std::vector<std::unique_ptr<Card>&> pending;
+	int num_pending = 0;
 	int total = 0;
 	for (auto& card : m_cards)
 	{
 		int point = card->GetPoint();
 		if (point < 0)
-			pending.push_back(card);
+			num_pending++;
 		else
 			total += point;
 	}
-	size_t i = pending.size();
-	for (auto& card : pending)
+	for (; num_pending > 0; num_pending--)
 	{
-		if (total + 11 > Game::BUST_POINT && --i <= 0)
+		if (total + 11 > Game::BUST_POINT && num_pending <= 1)
 			total += 11;
 		else
 			total += 1;

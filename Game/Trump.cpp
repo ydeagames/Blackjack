@@ -15,14 +15,14 @@ void Trump::Create()
 {
 	m_cards.clear();
 	for (int i = 0; i < Card::NUM_RANKS*Card::NUM_SUITS; i++)
-		m_cards.emplace_back(std::make_shared<Card>(i));
+		m_cards.emplace_back(std::make_unique<Card>(i));
 }
 
 void Trump::Shuffle()
 {
-	size_t size = m_cards.size();
+	int size = static_cast<int>(m_cards.size());
 	for (int i = 0; i < size - 1; i++)
-		utils::swap(m_cards[i], m_cards[utils::rndRange(i + 1, static_cast<int>(size) - 1)]);
+		utils::swap(m_cards[i], m_cards[utils::rndRange(i + 1, size - 1)]);
 }
 
 void Trump::Show()

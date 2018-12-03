@@ -13,7 +13,7 @@ void Game::Start()
 	trump.Shuffle();	// トランプをシャッフル
 
 	std::vector<std::unique_ptr<Player>> players;
-	players.emplace_back(std::make_unique<NormalPlayer>());
+	players.emplace_back(std::make_unique<NormalPlayer>("プレイヤー1"));
 	players.emplace_back(std::make_unique<DealerPlayer>());
 	auto& main_player = players.front();
 
@@ -24,6 +24,7 @@ void Game::Start()
 			card->SetPrivate(true);
 		player->AddCard(std::move(card));
 		player->AddCard(trump.DrawCard());
+		player->Show(main_player);
 	}
 
 	for (auto& player : players)
@@ -36,6 +37,9 @@ void Game::Start()
 			if (!player->ChooseHit())
 				break;
 			player->AddCard(trump.DrawCard());
+			player->Show(main_player);
 		}
 	}
+
+	std::cout << "####### ブラックジャックおわり #######" << std::endl;
 }

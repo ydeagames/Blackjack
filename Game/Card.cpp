@@ -36,6 +36,7 @@ int Card::GetPoint()
 		return 10;
 	else if (rank == 0)	// A ‚Í1‚©11ƒ|ƒCƒ“ƒg
 		return -1;		// Œˆ’è‚³‚ê‚Ä‚¢‚È‚¢
+	return rank + 1;
 }
 
 void Card::SetPrivate(bool hidden)

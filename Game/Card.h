@@ -25,5 +25,6 @@ public:
 	void ShowPrivate();				// 持ち主の表示
 	int GetPoint();					// ポイント(カードの価値)を取得
 	void SetPrivate(bool hidden);	// 表向きにするか
+	bool IsPrivate();				// 裏向きか
 };
 

@@ -17,6 +17,8 @@ void Game::Start()
 	players.emplace_back(std::make_unique<DealerPlayer>());
 	auto& main_player = players.front();
 
+	// カード配布
+	std::cout << "カードを配ります" << std::endl;
 	for (auto& player : players)
 	{
 		auto card = trump.DrawCard();
@@ -32,13 +34,22 @@ void Game::Start()
 		std::cout << player->GetName() << "のターン" << std::endl;
 		while (true)
 		{
-			std::cout << "手札 (" << player->GetTotal() << "pt): ";
 			player->Show(main_player);
-			if (!player->ChooseHit())
+			bool choicehit = player->ChooseHit();
+			if (choicehit)
+			{
+				std::cout << "ヒット!" << std::endl;
+			}
+			else
 				break;
 			player->AddCard(trump.DrawCard());
-			player->Show(main_player);
+			if (player->IsBust())
+			{
+				std::cout << "バスト!" << std::endl;
+				break;
+			}
 		}
+		player->Show(main_player);
 	}
 
 	std::cout << "####### ブラックジャックおわり #######" << std::endl;

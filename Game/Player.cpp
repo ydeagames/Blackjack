@@ -4,20 +4,31 @@
 
 void Player::Show(const std::unique_ptr<Player>& player)
 {
-	//bool start = true;
-	//for (auto& card : m_cards)
-	//	if (card)
-	//	{
-	//		if (start)
-	//			start = false;
-	//		else
-	//			std::cout << ", ";
-	//		if (this == player.get())
-	//			card->ShowPrivate();
-	//		else
-	//			card->ShowPublic();
-	//	}
-	//std::cout << std::endl;
+	int secret = 0;
+	if (this != player.get())
+		for (auto& card : m_cards)
+			if (card && card->IsPrivate())
+				secret += card->GetPoint();
+	std::cout << GetName() << "‚ÌŽèŽD(";
+	if (this == player.get() || secret <= 0)
+		std::cout << GetTotal();
+	else
+		std::cout << GetTotal() - secret << "+?";
+	std::cout << "pt): ";
+	bool start = true;
+	for (auto& card : m_cards)
+		if (card)
+		{
+			if (start)
+				start = false;
+			else
+				std::cout << ", ";
+			if (this == player.get())
+				card->ShowPrivate();
+			else
+				card->ShowPublic();
+		}
+	std::cout << std::endl;
 }
 
 int Player::GetTotal()
@@ -34,12 +45,17 @@ int Player::GetTotal()
 	}
 	for (; num_pending > 0; num_pending--)
 	{
-		if (total + 11 > Game::BUST_POINT && num_pending <= 1)
-			total += 11;
-		else
+		if (total + 11 > Game::BUST_POINT || num_pending > 1)
 			total += 1;
+		else
+			total += 11;
 	}
 	return total;
+}
+
+bool Player::IsBust()
+{
+	return GetTotal() > Game::BUST_POINT;
 }
 
 void Player::AddCard(std::unique_ptr<Card>&& newcard)

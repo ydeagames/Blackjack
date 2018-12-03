@@ -43,3 +43,8 @@ void Card::SetPrivate(bool hidden)
 {
 	is_private = hidden;
 }
+
+bool Card::IsPrivate()
+{
+	return is_private;
+}

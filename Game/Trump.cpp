@@ -42,8 +42,8 @@ void Trump::Show()
 
 std::unique_ptr<Card> Trump::DrawCard()
 {
-	for (auto itr = m_cards.begin(); itr != m_cards.end(); itr = m_cards.erase(itr))
+	for (auto itr = m_cards.erase(m_cards.begin()); itr != m_cards.end(); itr = m_cards.erase(itr))
 		if (*itr)
 			return std::move(*itr);
-	return nullptr;
+	throw std::logic_error("ŽRŽD‚ª‚ ‚è‚Ü‚¹‚ñ");
 }

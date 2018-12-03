@@ -18,6 +18,7 @@ public:
 	virtual void AddCard(std::unique_ptr<Card>&& newcard);
 	virtual void Show(const std::unique_ptr<Player>& player);
 	virtual int GetTotal();
+	virtual bool IsBust();
 };
 
 class DealerPlayer : public Player

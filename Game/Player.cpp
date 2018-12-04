@@ -10,7 +10,7 @@ void Player::Show(const std::unique_ptr<Player>& player)
 			if (card && card->IsPrivate())
 				secret += card->GetPoint();
 	std::cout << GetName() << "‚ÌŽèŽD(";
-	if (this == player.get() || secret <= 0)
+	if (this == player.get() || secret == 0)
 		std::cout << GetTotal();
 	else
 		std::cout << GetTotal() - secret << "+?";

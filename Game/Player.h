@@ -15,10 +15,14 @@ public:
 	virtual std::string GetName() = 0;
 	virtual bool ChooseHit() = 0;
 	virtual bool IsDealer() = 0;
-	virtual void AddCard(std::unique_ptr<Card>&& newcard);
-	virtual void Show(const std::unique_ptr<Player>& player);
-	virtual int GetTotal();
-	virtual bool IsBust();
+	
+public:
+	void AddCard(std::unique_ptr<Card>&& newcard);
+	void Show(const std::unique_ptr<Player>& player);
+	bool IsMe(const std::unique_ptr<Player>& player);
+	void ShowCard(const std::unique_ptr<Player>& player, const std::unique_ptr<Card>& card);
+	int GetTotal();
+	bool IsBust();
 };
 
 class DealerPlayer : public Player

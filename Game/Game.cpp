@@ -46,10 +46,7 @@ void Game::Start()
 				std::cout << "@ ƒqƒbƒg!";
 				auto card = trump.DrawCard();
 				std::cout << "(Get: ";
-				if (player == main_player)
-					card->ShowPrivate();
-				else
-					card->ShowPublic();
+				player->ShowCard(main_player, card);
 				std::cout << ")" << std::endl;
 				player->AddCard(std::move(card));
 			}

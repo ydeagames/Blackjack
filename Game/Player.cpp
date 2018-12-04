@@ -10,11 +10,14 @@ void Player::Show(const std::unique_ptr<Player>& player)
 			if (card && card->IsPrivate())
 				secret += card->GetPoint();
 	std::cout << GetName() << "‚ÌŽèŽD(";
-	if (this == player.get() || secret == 0)
+	if (IsMe(player) || secret == 0)
 		std::cout << GetTotal();
 	else
 		std::cout << GetTotal() - secret << "+?";
-	std::cout << "pt): ";
+	std::cout << "pt";
+	if (IsBust())
+		std::cout << "[Bust]";
+	std::cout << "): ";
 	bool start = true;
 	for (auto& card : m_cards)
 		if (card)
@@ -23,12 +26,22 @@ void Player::Show(const std::unique_ptr<Player>& player)
 				start = false;
 			else
 				std::cout << ", ";
-			if (this == player.get())
-				card->ShowPrivate();
-			else
-				card->ShowPublic();
+			ShowCard(player, card);
 		}
 	std::cout << std::endl;
+}
+
+bool Player::IsMe(const std::unique_ptr<Player>& player)
+{
+	return this == player.get();
+}
+
+void Player::ShowCard(const std::unique_ptr<Player>& player, const std::unique_ptr<Card>& card)
+{
+	if (IsMe(player))
+		card->ShowPrivate();
+	else
+		card->ShowPublic();
 }
 
 int Player::GetTotal()

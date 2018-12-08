@@ -2,14 +2,14 @@
 #include "Card.h"
 #include "Game.h"
 
-void Player::Show(const std::unique_ptr<Player>& player)
+void Player::Show(const std::shared_ptr<Player>& player)
 {
 	int secret = 0;
 	if (this != player.get())
 		for (auto& card : m_cards)
 			if (card && card->IsPrivate())
 				secret += card->GetPoint();
-	std::cout << GetName() << "‚ÌŽèŽD(";
+	std::cout << GetUser() << "‚ÌŽèŽD(";
 	if (IsMe(player) || secret == 0)
 		std::cout << GetTotal();
 	else
@@ -31,12 +31,12 @@ void Player::Show(const std::unique_ptr<Player>& player)
 	std::cout << std::endl;
 }
 
-bool Player::IsMe(const std::unique_ptr<Player>& player)
+bool Player::IsMe(const std::shared_ptr<Player>& player)
 {
 	return this == player.get();
 }
 
-void Player::ShowCard(const std::unique_ptr<Player>& player, const std::unique_ptr<Card>& card)
+void Player::ShowCard(const std::shared_ptr<Player>& player, const std::unique_ptr<Card>& card)
 {
 	if (IsMe(player))
 		card->ShowPrivate();
@@ -69,6 +69,11 @@ int Player::GetTotal()
 bool Player::IsBust()
 {
 	return GetTotal() > Game::BUST_POINT;
+}
+
+User& Player::GetUser()
+{
+	return *user;
 }
 
 void Player::AddCard(std::unique_ptr<Card>&& newcard)

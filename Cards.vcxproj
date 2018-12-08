@@ -19,14 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Blackjack.h" />
     <ClInclude Include="Game\Card.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\pch.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\Trump.h" />
+    <ClInclude Include="Game\User.h" />
     <ClInclude Include="Game\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Blackjack.cpp" />
     <ClCompile Include="Game\Card.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\Main.cpp" />
@@ -40,6 +43,7 @@
     </ClCompile>
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\Trump.cpp" />
+    <ClCompile Include="Game\User.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9C5299E5-3C66-4B32-8F02-7ADDDDD52EDF}</ProjectGuid>

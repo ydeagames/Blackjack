@@ -5,17 +5,23 @@
 
 void Player::Show(const std::shared_ptr<Player>& player)
 {
+	int total_min = GetPoint(player, true);
 	int total = GetPoint(player);
 	int total_real = GetPoint(nullptr);
 	std::cout << GetUser()->GetName() << "の手札(";
-	if (total == total_real)
-		std::cout << total;
-	else
-		std::cout << total << "+?";
+	if (total_min != total)
+		std::cout << total - 10 << "/";
+	std::cout << total;
+	if (total != total_real)
+		std::cout << "+?";
+
 	std::cout << "pt";
 	bool bust = IsBust();
+	bool blackjack = IsBlackjack();
 	if (bust)
-		std::cout << "[Bust]";
+		std::cout << "[BUST]";
+	if (blackjack)
+		std::cout << "[BLACKJACK]";
 	std::cout << "): ";
 	bool start = true;
 	for (auto& card : m_cards)
@@ -25,33 +31,40 @@ void Player::Show(const std::shared_ptr<Player>& player)
 				start = false;
 			else
 				std::cout << ", ";
-			card->Show(bust ? nullptr : player);
+			card->Show((bust || blackjack) ? nullptr : player);
 		}
 	std::cout << std::endl;
 }
 
-int Player::GetPoint(const std::shared_ptr<Player>& owner)
+int Player::GetPoint(const std::shared_ptr<Player>& owner, bool min_flag)
 {
 	int num_pending = 0;
 	int total = 0;
 	for (auto& card : m_cards)
 	{
-		int point = card->GetPoint(nullptr);
-		if (point < 0)
-			num_pending++;
-		else
-			total += point;
+		if (card->IsVisible(owner))
+		{
+			int point = card->GetPoint(nullptr);
+			if (point < 0)
+				num_pending++;
+			else
+				total += point;
+		}
 	}
-	for (; num_pending > 0; num_pending--)
+
+	if (num_pending > 0) // Aが1枚以上だったら
 	{
-		if (total + 11 > Blackjack::BUST_POINT || num_pending > 1)
+		if (num_pending > 1)  // Aが2枚以上だったら
+		{
+			total += num_pending - 1; // 1つを残してすべてのAを1として追加
+			//num_pending = 1;  // Aは残り1枚
+		}
+		if (total > 10 || min_flag)
 			total += 1;
 		else
 			total += 11;
 	}
-	for (auto& card : m_cards)
-		if (!card->IsVisible(owner))
-			total -= card->GetPoint(nullptr);
+
 	return total;
 }
 
@@ -66,6 +79,11 @@ bool Player::HasCard(const std::shared_ptr<Player>& player, int point)
 bool Player::IsBust()
 {
 	return GetPoint(nullptr) > Blackjack::BUST_POINT;
+}
+
+bool Player::IsBlackjack()
+{
+	return GetPoint(nullptr) == Blackjack::BUST_POINT;
 }
 
 void Player::SetBet(int chip)
@@ -132,7 +150,7 @@ void DealerPlayer::OnLose()
 
 Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 {
-	if (GetPoint(nullptr) == Blackjack::BUST_POINT)
+	if (IsBlackjack())
 		return Choice::STAND;
 
 	bool flag_begin = m_cards.size() == 2;
@@ -149,7 +167,7 @@ Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 	};
 	std::vector<Choose> chooses;
 
-	char input = '0';
+	char input = '1';
 	chooses.push_back({ input++, "STAND", Choice::STAND });
 	chooses.push_back({ input++, "HIT", Choice::HIT });
 	if (flag_double)
@@ -159,7 +177,7 @@ Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 	if (flag_insurance)
 		chooses.push_back({ input++, "INSURANCE", Choice::INSURANCE });
 
-	std::cout << "あなたのターンです(Chips: " << GetUser()->GetChip() << ", Bet: " << GetBet() << "): ";
+	std::cout << "あなたのターンです(Chips: " << GetUser()->GetChip() << ", Bet: " << GetBet() << ")" << std::endl;
 	for (Choose choose : chooses)
 		std::cout << "[" << choose.input << ": " << choose.name << "] ";
 	std::cout << std::endl;
@@ -171,7 +189,7 @@ Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 		for (Choose choose : chooses)
 			if (input == choose.input)
 			{
-				std::cout << "[" << choose.input << ": " << choose.name << "]";
+				std::cout << "[" << choose.input << ": " << choose.name << "]" << std::endl;
 				return choose.choice;
 			}
 	}
@@ -185,7 +203,8 @@ bool NormalPlayer::IsDealer()
 std::shared_ptr<Player> NormalPlayer::Split()
 {
 	auto cloned = std::make_shared<NormalPlayer>(GetUser());
-	auto& split = *m_cards.erase(m_cards.end());
+	auto split = std::move(m_cards.back());
+	m_cards.pop_back();
 	split->SetOwner(nullptr);
 	cloned->AddCard(std::move(split));
 	cloned->splited = true;
@@ -197,7 +216,10 @@ std::shared_ptr<Player> NormalPlayer::Split()
 
 void NormalPlayer::OnWin()
 {
-	GetUser()->AddChip(bet * 2);
+	if (IsBlackjack())
+		GetUser()->AddChip(bet * 5 / 2);
+	else
+		GetUser()->AddChip(bet * 2);
 }
 
 void NormalPlayer::OnDraw()

@@ -17,11 +17,11 @@ void Blackjack::Start()
 	for (auto& playerUser : playerUsers)
 		players.emplace_back(std::make_shared<NormalPlayer>(playerUser));
 	players.emplace_back(std::make_shared<DealerPlayer>(dealerUser));
-	auto& main_player = players.front();
-	auto& dealer_player = players.back();
+	auto main_player = players.front();
+	auto dealer_player = players.back();
 
 	// ベット決定
-	std::cout << "--> 掛け金設定" << std::endl;
+	std::cout << "--> BET設定" << std::endl;
 	for (auto& player : players)
 	{
 		if (!player->IsDealer())
@@ -30,14 +30,17 @@ void Blackjack::Start()
 			{
 				int chip = player->GetUser()->GetChip();
 				int bet;
-				std::cout << "ベット額(チップ: " << chip << ")> ";
+				std::cout << "BET(チップ: " << chip << ")> ";
 				std::cin >> bet;
-				if (bet <= chip)
+				if (bet > chip)
+					std::cout << "チップが足りません" << std::endl;
+				if (bet <= 0)
+					std::cout << "1チップ以上かける必要があります" << std::endl;
+				else
 				{
 					player->Bet(bet);
 					break;
 				}
-				std::cout << "チップが足りません" << std::endl;
 			}
 		}
 	}
@@ -60,19 +63,19 @@ void Blackjack::Start()
 	std::cout << "--> ゲーム開始" << std::endl;
 	for (auto itr = players.begin(); itr != players.end(); ++itr)
 	{
-		std::shared_ptr<Player>& player = *itr;
+		std::shared_ptr<Player> player = *itr;
 
 		std::cout << "! " << player->GetUser()->GetName() << "のターン" << std::endl;
 		bool choice_running = true;
 		while (choice_running)
 		{
-			player->Show(main_player);
+			player->Show(nullptr);
 			Choice choicehit = player->Choose(dealer_player);
 
 			auto draw_func = [&](std::shared_ptr<Player> player) {
 				auto card = trump.DrawCard();
 				std::cout << "(Get: ";
-				card->Show(main_player);
+				card->Show(nullptr);
 				std::cout << ")" << std::endl;
 				player->AddCard(std::move(card));
 			};
@@ -99,7 +102,9 @@ void Blackjack::Start()
 					auto split = player->Split();
 					draw_func(split);
 					draw_func(player);
+					itr++;
 					itr = players.insert(itr, std::move(split));
+					itr--;
 				}
 				break;
 			case Choice::INSURANCE:
@@ -110,7 +115,7 @@ void Blackjack::Start()
 			}
 			if (player->IsBust())
 			{
-				std::cout << "× バスト!" << std::endl;
+				std::cout << "× BUST!" << std::endl;
 				break;
 			}
 		}
@@ -126,8 +131,14 @@ void Blackjack::Start()
 			continue;
 		player->Show(player);
 		std::cout << player->GetUser()->GetName() << ": ";
-		int sub = player->GetPoint(nullptr) - dealer_player->GetPoint(nullptr);
-		if (player->IsBust() || sub > 0)
+		int sub;
+		if (dealer_player->IsBlackjack() || player->IsBust())
+			sub = -1;
+		else if (dealer_player->IsBust())
+			sub = 1;
+		else
+			sub = player->GetPoint(nullptr) - dealer_player->GetPoint(nullptr);
+		if (sub < 0)
 		{
 			std::cout << "負け";
 			player->OnLose();

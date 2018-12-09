@@ -4,12 +4,14 @@ class User
 {
 private:
 	std::string name;
+	int chip_before;
 	int chip;
 
 public:
 	User(const std::string& name, int balance = 100)
 		: name(name)
-		, chip(balance) {}
+		, chip(balance)
+		, chip_before(balance) {}
 	~User() = default;
 
 public:
@@ -22,4 +24,6 @@ public:
 	void SetChip(int score);
 	int GetChip();
 	void ShowChip();
+	void Commit();
+	int GetChipBefore();
 };

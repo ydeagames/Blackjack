@@ -42,9 +42,10 @@ public:
 	std::shared_ptr<User> GetUser();
 	void AddCard(std::unique_ptr<Card>&& newcard);
 	void Show(const std::shared_ptr<Player>& player);
-	int GetPoint(const std::shared_ptr<Player>& owner);
+	int GetPoint(const std::shared_ptr<Player>& owner, bool min_flag = false);
 	bool HasCard(const std::shared_ptr<Player>& player, int point);
 	bool IsBust();
+	bool IsBlackjack();
 	void SetBet(int chip);
 	void AddBet(int chip);
 	void Bet(int chip);

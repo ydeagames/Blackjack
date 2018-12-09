@@ -19,6 +19,7 @@ void Game::Start()
 		for (auto& player : players)
 		{
 			player->ShowChip();
+			player->Commit();
 			if (player->GetChip() <= 0)
 				running = false;
 		}

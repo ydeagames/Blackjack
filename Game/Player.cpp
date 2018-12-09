@@ -7,7 +7,7 @@ void Player::Show(const std::shared_ptr<Player>& player)
 {
 	int total = GetPoint(player);
 	int total_real = GetPoint(nullptr);
-	std::cout << GetUser() << "の手札(";
+	std::cout << GetUser()->GetName() << "の手札(";
 	if (total == total_real)
 		std::cout << total;
 	else
@@ -68,9 +68,31 @@ bool Player::IsBust()
 	return GetPoint(nullptr) > Blackjack::BUST_POINT;
 }
 
-User& Player::GetUser()
+void Player::SetBet(int chip)
 {
-	return *user;
+	bet = chip;
+}
+
+void Player::AddBet(int chip)
+{
+	bet += chip;
+}
+
+void Player::Bet(int chip)
+{
+	auto user = GetUser();
+	user->AddChip(-chip);
+	AddBet(chip);
+}
+
+int Player::GetBet()
+{
+	return bet;
+}
+
+std::shared_ptr<User> Player::GetUser()
+{
+	return user;
 }
 
 void Player::AddCard(std::unique_ptr<Card>&& newcard)
@@ -91,6 +113,11 @@ bool DealerPlayer::IsDealer()
 	return true;
 }
 
+std::shared_ptr<Player> DealerPlayer::Split()
+{
+	throw std::logic_error("ディーラーはSplitできません");
+}
+
 void DealerPlayer::OnWin()
 {
 }
@@ -107,9 +134,12 @@ Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 {
 	if (GetPoint(nullptr) == Blackjack::BUST_POINT)
 		return Choice::STAND;
-	bool flag_double = m_cards.size() == 2;
-	bool flag_split = flag_double && (m_cards.front()->GetPoint(nullptr) == m_cards.back()->GetPoint(nullptr));
-	bool flag_insurance = flag_double && dealerPlayer->HasCard(shared_from_this(), -1);
+
+	bool flag_begin = m_cards.size() == 2;
+	bool flag_enough = GetUser()->GetChip() >= GetBet();
+	bool flag_double = flag_begin && flag_enough;
+	bool flag_split = flag_begin && flag_enough && !splited && (m_cards.front()->GetPoint(nullptr) == m_cards.back()->GetPoint(nullptr));
+	bool flag_insurance = flag_begin && !insuranced && dealerPlayer->HasCard(shared_from_this(), -1);
 
 	struct Choose
 	{
@@ -124,12 +154,12 @@ Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 	chooses.push_back({ input++, "HIT", Choice::HIT });
 	if (flag_double)
 		chooses.push_back({ input++, "DOUBLE", Choice::DOUBLE });
-	if (flag_split)
+	if (flag_split && !splited)
 		chooses.push_back({ input++, "SPLIT", Choice::SPLIT });
 	if (flag_insurance)
 		chooses.push_back({ input++, "INSURANCE", Choice::INSURANCE });
 
-	std::cout << "あなたのターンです: ";
+	std::cout << "あなたのターンです(Chips: " << GetUser()->GetChip() << ", Bet: " << GetBet() << "): ";
 	for (Choose choose : chooses)
 		std::cout << "[" << choose.input << ": " << choose.name << "] ";
 	std::cout << std::endl;
@@ -152,14 +182,30 @@ bool NormalPlayer::IsDealer()
 	return false;
 }
 
+std::shared_ptr<Player> NormalPlayer::Split()
+{
+	auto cloned = std::make_shared<NormalPlayer>(GetUser());
+	auto& split = *m_cards.erase(m_cards.end());
+	split->SetOwner(nullptr);
+	cloned->AddCard(std::move(split));
+	cloned->splited = true;
+	cloned->SetBet(0);
+	cloned->Bet(GetBet());
+	splited = true;
+	return cloned;
+}
+
 void NormalPlayer::OnWin()
 {
+	GetUser()->AddChip(bet * 2);
 }
 
 void NormalPlayer::OnDraw()
 {
+	GetUser()->AddChip(bet);
 }
 
 void NormalPlayer::OnLose()
 {
+	// None
 }

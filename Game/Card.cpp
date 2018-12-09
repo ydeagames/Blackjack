@@ -1,4 +1,5 @@
 #include "Card.h"
+#include "Player.h"
 
 //const std::string Card::suits[] = { "\u2664", "\u2667", "\u2662", "\u2661" };
 const std::string Card::suits[] = { "S", "C", "D", "H" };
@@ -48,7 +49,7 @@ bool Card::IsOwner(const std::shared_ptr<Player>& player)
 	auto ownerptr = owner.lock();
 	if (!ownerptr)
 		return true;
-	return player == ownerptr;
+	return player->GetUser() == ownerptr->GetUser();
 }
 
 void Card::SetPrivate(bool _hidden)

@@ -107,9 +107,4 @@
       <Filter>リソース ファイル\SE</Filter>
     </Media>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd">
-      <Filter>ヘッダー ファイル</Filter>
-    </None>
-  </ItemGroup>
 </Project>

@@ -5,8 +5,8 @@
 
 void Player::Show(const std::shared_ptr<Player>& player)
 {
-	int total = GetTotal(player);
-	int total_real = GetTotal(nullptr);
+	int total = GetPoint(player);
+	int total_real = GetPoint(nullptr);
 	std::cout << GetUser() << "の手札(";
 	if (total == total_real)
 		std::cout << total;
@@ -30,7 +30,7 @@ void Player::Show(const std::shared_ptr<Player>& player)
 	std::cout << std::endl;
 }
 
-int Player::GetTotal(const std::shared_ptr<Player>& owner)
+int Player::GetPoint(const std::shared_ptr<Player>& owner)
 {
 	int num_pending = 0;
 	int total = 0;
@@ -55,9 +55,17 @@ int Player::GetTotal(const std::shared_ptr<Player>& owner)
 	return total;
 }
 
+bool Player::HasCard(const std::shared_ptr<Player>& player, int point)
+{
+	for (auto& card : m_cards)
+		if (card->GetPoint(player) == point)
+			return true;
+	return false;
+}
+
 bool Player::IsBust()
 {
-	return GetTotal(nullptr) > Blackjack::BUST_POINT;
+	return GetPoint(nullptr) > Blackjack::BUST_POINT;
 }
 
 User& Player::GetUser()
@@ -71,9 +79,11 @@ void Player::AddCard(std::unique_ptr<Card>&& newcard)
 	m_cards.push_back(std::move(newcard));
 }
 
-bool DealerPlayer::ChooseHit()
+Choice DealerPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 {
-	return GetTotal(nullptr) <= 16;
+	if (GetPoint(nullptr) <= 16)
+		return Choice::HIT;
+	return Choice::STAND;
 }
 
 bool DealerPlayer::IsDealer()
@@ -81,26 +91,75 @@ bool DealerPlayer::IsDealer()
 	return true;
 }
 
-bool NormalPlayer::ChooseHit()
+void DealerPlayer::OnWin()
 {
-	std::cout << "ヒットしますか？ [y/n]> ";
+}
+
+void DealerPlayer::OnDraw()
+{
+}
+
+void DealerPlayer::OnLose()
+{
+}
+
+Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
+{
+	if (GetPoint(nullptr) == Blackjack::BUST_POINT)
+		return Choice::STAND;
+	bool flag_double = m_cards.size() == 2;
+	bool flag_split = flag_double && (m_cards.front()->GetPoint(nullptr) == m_cards.back()->GetPoint(nullptr));
+	bool flag_insurance = flag_double && dealerPlayer->HasCard(shared_from_this(), -1);
+
+	struct Choose
+	{
+		char input;
+		std::string name;
+		Choice choice;
+	};
+	std::vector<Choose> chooses;
+
+	char input = '0';
+	chooses.push_back({ input++, "STAND", Choice::STAND });
+	chooses.push_back({ input++, "HIT", Choice::HIT });
+	if (flag_double)
+		chooses.push_back({ input++, "DOUBLE", Choice::DOUBLE });
+	if (flag_split)
+		chooses.push_back({ input++, "SPLIT", Choice::SPLIT });
+	if (flag_insurance)
+		chooses.push_back({ input++, "INSURANCE", Choice::INSURANCE });
+
+	std::cout << "あなたのターンです: ";
+	for (Choose choose : chooses)
+		std::cout << "[" << choose.input << ": " << choose.name << "] ";
+	std::cout << std::endl;
+	std::cout << "> ";
+
 	while (true)
 	{
 		char input = static_cast<char>(_getch());
-		if (input == 'y' || input == 'Y')
-		{
-			std::cout << "はい" << std::endl;
-			return true;
-		}
-		else if (input == 'n' || input == 'N')
-		{
-			std::cout << "いいえ" << std::endl;
-			return false;
-		}
+		for (Choose choose : chooses)
+			if (input == choose.input)
+			{
+				std::cout << "[" << choose.input << ": " << choose.name << "]";
+				return choose.choice;
+			}
 	}
 }
 
 bool NormalPlayer::IsDealer()
 {
 	return false;
+}
+
+void NormalPlayer::OnWin()
+{
+}
+
+void NormalPlayer::OnDraw()
+{
+}
+
+void NormalPlayer::OnLose()
+{
 }

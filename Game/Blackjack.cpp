@@ -4,7 +4,7 @@
 #include "Card.h"
 #include "User.h"
 
-void Blackjack::Start(const std::shared_ptr<User>& dealerUser, const std::vector<std::shared_ptr<User>>& playerUsers)
+void Blackjack::Start()
 {
 	std::cout << "########## ブラックジャック ##########" << std::endl;
 
@@ -36,24 +36,38 @@ void Blackjack::Start(const std::shared_ptr<User>& dealerUser, const std::vector
 
 	// ゲーム開始
 	std::cout << "--> ゲーム開始" << std::endl;
-	for (auto& player : players)
+	for (auto itr = players.begin(); itr == players.end(); ++itr)
 	{
+		std::shared_ptr<Player>& player = *itr;
+
 		std::cout << "! " << player->GetUser() << "のターン" << std::endl;
-		while (true)
+		bool choice_running = true;
+		while (choice_running)
 		{
 			player->Show(main_player);
-			bool choicehit = player->ChooseHit();
-			if (choicehit)
+			Choice choicehit = player->Choose(dealer_player);
+			switch (choicehit)
 			{
+			case Choice::STAND:
+				std::cout << "@ スタンド" << std::endl;
+				choice_running = false;
+				break;
+			case Choice::HIT:
 				std::cout << "@ ヒット!";
-				auto card = trump.DrawCard();
-				std::cout << "(Get: ";
-				card->Show(main_player);
-				std::cout << ")" << std::endl;
-				player->AddCard(std::move(card));
-			}
-			else
-			{
+				{
+					auto card = trump.DrawCard();
+					std::cout << "(Get: ";
+					card->Show(main_player);
+					std::cout << ")" << std::endl;
+					player->AddCard(std::move(card));
+				}
+				break;
+			case Choice::DOUBLE:
+				break;
+			case Choice::SPLIT:
+				std::cout << "@ スプリット" << std::endl;
+				break;
+			case Choice::INSURANCE:
 				std::cout << "@ スタンド" << std::endl;
 				break;
 			}
@@ -75,7 +89,7 @@ void Blackjack::Start(const std::shared_ptr<User>& dealerUser, const std::vector
 			continue;
 		player->Show(player);
 		std::cout << player->GetUser() << ": ";
-		if (player->IsBust() || player->GetTotal(nullptr) < dealer_player->GetTotal(nullptr))
+		if (player->IsBust() || player->GetPoint(nullptr) < dealer_player->GetPoint(nullptr))
 			std::cout << "負け";
 		else
 			std::cout << "勝ち";

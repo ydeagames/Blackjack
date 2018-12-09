@@ -8,4 +8,6 @@ int main()
 	game.Start();
 
 	std::cin.get();
+
+	return 0;
 }

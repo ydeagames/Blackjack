@@ -1,5 +1,5 @@
 #include "Blackjack.h"
-#include "Trump.h"
+#include "Deck.h"
 #include "Player.h"
 #include "Card.h"
 #include "User.h"
@@ -9,7 +9,7 @@ int Blackjack::Start()
 	Sleep(50);
 
 	// 初期化
-	Trump trump = {};	// トランプケースを用意
+	Deck trump = {};	// トランプケースを用意
 	trump.Create();		// トランプを用意
 	trump.Shuffle();	// トランプをシャッフル
 

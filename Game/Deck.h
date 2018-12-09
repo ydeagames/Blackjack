@@ -2,14 +2,14 @@
 
 class Card;
 
-class Trump
+class Deck
 {
 private:
 	std::vector<std::unique_ptr<Card>> m_cards;
 
 public:
-	Trump();
-	~Trump();
+	Deck();
+	~Deck();
 
 public:
 	// ê∂ê¨

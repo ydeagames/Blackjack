@@ -1,18 +1,18 @@
-#include "Trump.h"
+#include "Deck.h"
 #include "Card.h"
 #include "Utils.h"
 
-Trump::Trump()
+Deck::Deck()
 	: m_cards{}
 {
 }
 
-Trump::~Trump()
+Deck::~Deck()
 {
 }
 
 // 生成
-void Trump::Create()
+void Deck::Create()
 {
 	// クリア
 	m_cards.clear();
@@ -22,7 +22,7 @@ void Trump::Create()
 }
 
 // シャッフル
-void Trump::Shuffle()
+void Deck::Shuffle()
 {
 	// シャッフル・アルゴリズム
 	int size = static_cast<int>(m_cards.size());
@@ -31,7 +31,7 @@ void Trump::Shuffle()
 }
 
 // 表示
-void Trump::Show()
+void Deck::Show()
 {
 	bool start = true;
 	for (auto& card : m_cards)
@@ -49,7 +49,7 @@ void Trump::Show()
 }
 
 // カードを引く
-std::unique_ptr<Card> Trump::DrawCard()
+std::unique_ptr<Card> Deck::DrawCard()
 {
 	// カードを山札から消してから
 	for (auto itr = m_cards.erase(m_cards.begin()); itr != m_cards.end(); itr = m_cards.erase(itr))

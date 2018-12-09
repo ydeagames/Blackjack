@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="リソース ファイル\SE">
+      <UniqueIdentifier>{c0b9f2d9-6a21-425a-a430-14596883c165}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Card.h">
@@ -65,5 +68,43 @@
     <ClCompile Include="Game\User.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\Audio\button.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\button_cancel.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\button2.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\button3.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\card_drag.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\card_kubaru.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\card_mekuru.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\card_move.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\card_send.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\cheer.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\fail.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
+    <Media Include="Resources\Audio\success.wav">
+      <Filter>リソース ファイル\SE</Filter>
+    </Media>
   </ItemGroup>
 </Project>

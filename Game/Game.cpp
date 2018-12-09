@@ -4,6 +4,14 @@
 
 void Game::Start()
 {
+	std::cout << "┏ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ┓" << std::endl;
+	std::cout << "┃                                               ┃" << std::endl;
+	std::cout << "┃               B L A C K J A C K               ┃" << std::endl;
+	std::cout << "┃                                               ┃" << std::endl;
+	std::cout << "┣ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ┫" << std::endl;
+	std::cout << "┃                               (c) YdeaGames   ┃" << std::endl;
+	std::cout << "┗ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ┛" << std::endl;
+
 	// 初期チップ
 	int default_balance = 1000;
 
@@ -13,6 +21,15 @@ void Game::Start()
 	// プレイヤー
 	std::shared_ptr<User> player = std::make_shared<User>("あなた", default_balance);
 	std::vector<std::shared_ptr<User>> players = { player };
+
+	std::cout << std::endl;
+	std::cout << "--> 初期チップ" << std::endl;
+	// 初期結果
+	for (auto& player : players)
+	{
+		std::cout << "  ";
+		player->ShowChip(false);
+	}
 
 	// ゲームループ
 	bool running = true;
@@ -40,10 +57,14 @@ void Game::Start()
 	}
 
 	// 最終結果
-	std::cout << "ゲーム終了" << std::endl;
-	std::cout << "最終結果" << std::endl;
+	std::cout << std::endl;
+	PlaySound(TEXT("Resources/Audio/button_cancel.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	Sleep(200);
+	std::cout << "--> 最終結果" << std::endl;
+	Sleep(800);
 	for (auto& player : players)
 	{
+		std::cout << "  ";
 		player->ShowChip(false);
 	}
 }

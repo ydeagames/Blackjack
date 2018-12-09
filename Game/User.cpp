@@ -40,6 +40,8 @@ void User::ShowChip(bool show_before)
 		std::cout << chip;
 	else
 		std::cout << "‚È‚µ";
+	if (show_before)
+		std::cout << "(" << chip - chip_before << ")";
 	std::cout << std::endl;
 }
 

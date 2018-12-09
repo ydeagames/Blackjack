@@ -3,7 +3,7 @@
 #include "User.h"
 #include "Blackjack.h"
 
-void Player::Show(const std::shared_ptr<Player>& player)
+void Player::Show(const std::shared_ptr<Player>& player, int draw_num)
 {
 	int total_min = GetPoint(player, true);
 	int total = GetPoint(player);
@@ -24,6 +24,7 @@ void Player::Show(const std::shared_ptr<Player>& player)
 		std::cout << "[BLACKJACK]";
 	std::cout << "): ";
 	bool start = true;
+	int i = static_cast<int>(m_cards.size());
 	for (auto& card : m_cards)
 		if (card)
 		{
@@ -31,7 +32,15 @@ void Player::Show(const std::shared_ptr<Player>& player)
 				start = false;
 			else
 				std::cout << ", ";
+			if (i <= draw_num)
+			{
+				PlaySound(TEXT("Resources/Audio/card_send.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				Sleep(200);
+			}
 			card->Show((bust || blackjack) ? nullptr : player);
+			if (i <= draw_num)
+				Sleep(400);
+			i--;
 		}
 	std::cout << std::endl;
 }
@@ -177,10 +186,13 @@ Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 	if (flag_insurance)
 		chooses.push_back({ input++, "INSURANCE", Choice::INSURANCE });
 
-	std::cout << "あなたのターンです(Chips: " << GetUser()->GetChip() << ", Bet: " << GetBet() << ")" << std::endl;
+	std::cout << "    ";
+	std::cout << GetUser()->GetName() << "の賭け: (チップ: " << GetUser()->GetChip() << ", BET: " << GetBet() << ")" << std::endl;
+	std::cout << "    ";
 	for (Choose choose : chooses)
 		std::cout << "[" << choose.input << ": " << choose.name << "] ";
 	std::cout << std::endl;
+	std::cout << "    ";
 	std::cout << "> ";
 
 	while (true)

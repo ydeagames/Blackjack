@@ -45,6 +45,20 @@
     <ClCompile Include="Game\Trump.cpp" />
     <ClCompile Include="Game\User.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\Audio\button.wav" />
+    <Media Include="Resources\Audio\button2.wav" />
+    <Media Include="Resources\Audio\button3.wav" />
+    <Media Include="Resources\Audio\button_cancel.wav" />
+    <Media Include="Resources\Audio\card_drag.wav" />
+    <Media Include="Resources\Audio\card_kubaru.wav" />
+    <Media Include="Resources\Audio\card_mekuru.wav" />
+    <Media Include="Resources\Audio\card_move.wav" />
+    <Media Include="Resources\Audio\card_send.wav" />
+    <Media Include="Resources\Audio\cheer.wav" />
+    <Media Include="Resources\Audio\fail.wav" />
+    <Media Include="Resources\Audio\success.wav" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9C5299E5-3C66-4B32-8F02-7ADDDDD52EDF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

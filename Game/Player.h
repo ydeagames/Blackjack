@@ -41,7 +41,7 @@ public:
 public:
 	std::shared_ptr<User> GetUser();
 	void AddCard(std::unique_ptr<Card>&& newcard);
-	void Show(const std::shared_ptr<Player>& player);
+	void Show(const std::shared_ptr<Player>& player, int draw_num = 0);
 	int GetPoint(const std::shared_ptr<Player>& owner, bool min_flag = false);
 	bool HasCard(const std::shared_ptr<Player>& player, int point);
 	bool IsBust();

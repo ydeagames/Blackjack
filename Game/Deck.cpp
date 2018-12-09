@@ -3,7 +3,7 @@
 #include "Utils.h"
 
 Deck::Deck()
-	: m_cards{}
+	: cards{}
 {
 }
 
@@ -15,26 +15,26 @@ Deck::~Deck()
 void Deck::Create()
 {
 	// クリア
-	m_cards.clear();
+	cards.clear();
 	// 全カード生成
 	for (int i = 0; i < Card::NUM_RANKS*Card::NUM_SUITS; i++)
-		m_cards.emplace_back(std::make_unique<Card>(i));
+		cards.emplace_back(std::make_unique<Card>(i));
 }
 
 // シャッフル
 void Deck::Shuffle()
 {
 	// シャッフル・アルゴリズム
-	int size = static_cast<int>(m_cards.size());
+	int size = static_cast<int>(cards.size());
 	for (int i = 0; i < size - 1; i++)
-		utils::swap(m_cards[i], m_cards[utils::rndRange(i + 1, size - 1)]);
+		utils::swap(cards[i], cards[utils::rndRange(i + 1, size - 1)]);
 }
 
 // 表示
 void Deck::Show()
 {
 	bool start = true;
-	for (auto& card : m_cards)
+	for (auto& card : cards)
 		if (card)
 		{
 			// 最初以外セミコロンを付ける
@@ -52,7 +52,7 @@ void Deck::Show()
 std::unique_ptr<Card> Deck::DrawCard()
 {
 	// カードを山札から消してから
-	for (auto itr = m_cards.erase(m_cards.begin()); itr != m_cards.end(); itr = m_cards.erase(itr))
+	for (auto itr = cards.erase(cards.begin()); itr != cards.end(); itr = cards.erase(itr))
 		if (*itr)
 		{
 			// オーナーをリセットして

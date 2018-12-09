@@ -5,7 +5,7 @@ class Card;
 class Deck
 {
 private:
-	std::vector<std::unique_ptr<Card>> m_cards;
+	std::vector<std::unique_ptr<Card>> cards;
 
 public:
 	Deck();

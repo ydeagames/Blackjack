@@ -33,8 +33,8 @@ void Player::Show(const std::shared_ptr<Player>& player, int draw_num)
 
 	// カード情報
 	bool start = true;
-	int i = static_cast<int>(m_cards.size());
-	for (auto& card : m_cards)
+	int i = static_cast<int>(cards.size());
+	for (auto& card : cards)
 		if (card)
 		{
 			// 最初以外セミコロンを付ける
@@ -60,7 +60,7 @@ int Player::GetPoint(const std::shared_ptr<Player>& owner, bool min_flag)
 {
 	int num_pending = 0;
 	int total = 0;
-	for (auto& card : m_cards)
+	for (auto& card : cards)
 	{
 		// 見えるカードの中で
 		if (card->IsVisible(owner))
@@ -94,7 +94,7 @@ int Player::GetPoint(const std::shared_ptr<Player>& owner, bool min_flag)
 // カードを持っているか
 bool Player::HasCard(const std::shared_ptr<Player>& player, int point)
 {
-	for (auto& card : m_cards)
+	for (auto& card : cards)
 		if (card->GetPoint(player) == point)
 			return true;
 	return false;
@@ -150,7 +150,7 @@ void Player::AddCard(std::unique_ptr<Card>&& newcard)
 	// オーナーをセット
 	newcard->SetOwner(shared_from_this());
 	// カードを移動
-	m_cards.push_back(std::move(newcard));
+	cards.push_back(std::move(newcard));
 }
 
 // ディーラーのAI
@@ -196,10 +196,10 @@ Choice NormalPlayer::Choose(const std::shared_ptr<Player>& dealerPlayer)
 		return Choice::STAND;
 
 	// フラグ
-	bool flag_begin = m_cards.size() == 2;
+	bool flag_begin = cards.size() == 2;
 	bool flag_enough = GetUser()->GetChip() >= GetBet();
 	bool flag_double = flag_begin && flag_enough;
-	bool flag_split = flag_begin && flag_enough && !splited && (m_cards.front()->GetPoint(nullptr) == m_cards.back()->GetPoint(nullptr));
+	bool flag_split = flag_begin && flag_enough && !splited && (cards.front()->GetPoint(nullptr) == cards.back()->GetPoint(nullptr));
 	bool flag_insurance = flag_begin && !insuranced && dealerPlayer->HasCard(shared_from_this(), -1);
 
 	// 選択肢
@@ -259,8 +259,8 @@ std::shared_ptr<Player> NormalPlayer::Split()
 	// 複製
 	auto cloned = std::make_shared<NormalPlayer>(GetUser());
 	// カードを分割
-	auto split = std::move(m_cards.back());
-	m_cards.pop_back();
+	auto split = std::move(cards.back());
+	cards.pop_back();
 	// オーナーをリセット
 	split->SetOwner(nullptr);
 	// カードをクローンに追加

@@ -16,7 +16,7 @@ class Player : public std::enable_shared_from_this<Player>
 {
 protected:
 	std::shared_ptr<User> user;
-	std::vector<std::unique_ptr<Card>> m_cards;
+	std::vector<std::unique_ptr<Card>> cards;
 	int bet = 0;
 
 public:

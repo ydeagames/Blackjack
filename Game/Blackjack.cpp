@@ -48,7 +48,7 @@ void Blackjack::Start(const std::shared_ptr<User>& dealerUser, const std::vector
 				std::cout << "@ ƒqƒbƒg!";
 				auto card = trump.DrawCard();
 				std::cout << "(Get: ";
-				player->ShowCard(main_player, card);
+				card->Show(main_player);
 				std::cout << ")" << std::endl;
 				player->AddCard(std::move(card));
 			}
@@ -75,7 +75,7 @@ void Blackjack::Start(const std::shared_ptr<User>& dealerUser, const std::vector
 			continue;
 		player->Show(player);
 		std::cout << player->GetUser() << ": ";
-		if (player->IsBust() || player->GetTotal() < dealer_player->GetTotal())
+		if (player->IsBust() || player->GetTotal(nullptr) < dealer_player->GetTotal(nullptr))
 			std::cout << "•‰‚¯";
 		else
 			std::cout << "Ÿ‚¿";

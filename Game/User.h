@@ -12,6 +12,7 @@ public:
 		, balance(balance) {}
 	~User() = default;
 
-	
-};
+	friend std::ostream& operator<<(std::ostream& os, const User& user);
 
+	void AddScore(int score);
+};

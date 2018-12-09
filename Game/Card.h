@@ -1,5 +1,7 @@
 #pragma once
 
+class Player;
+
 class Card
 {
 public:
@@ -13,7 +15,8 @@ public:
 private:
 	int suit;			// マーク
 	int rank;			// ランク
-	bool is_private;	// 裏向きか
+	std::weak_ptr<Player> owner; // 所有者
+	bool hidden;	// 裏向きか
 
 public:
 	Card(int suit, int rank);
@@ -21,10 +24,13 @@ public:
 	~Card() = default;
 
 public:
-	void ShowPublic();				// 一般表示
-	void ShowPrivate();				// 持ち主の表示
-	int GetPoint();					// ポイント(カードの価値)を取得
-	void SetPrivate(bool hidden);	// 表向きにするか
-	bool IsPrivate();				// 裏向きか
+	void SetOwner(const std::shared_ptr<Player>& owner);		// 所有者をセット
+	bool IsOwner(const std::shared_ptr<Player>& player);		// 所有者か
+	void SetPrivate(bool hidden);								// 表向きにするか
+	bool IsHidden();											// 裏向きか
+	bool IsVisible(const std::shared_ptr<Player>& player);		// 見ることができるか
+
+	void Show(const std::shared_ptr<Player>& player);			// 持ち主の表示
+	int GetPoint(const std::shared_ptr<Player>& player);		// ポイント(カードの価値)を取得
 };
 

@@ -1,21 +1,20 @@
 #include "Player.h"
 #include "Card.h"
-#include "Game.h"
+#include "User.h"
+#include "Blackjack.h"
 
 void Player::Show(const std::shared_ptr<Player>& player)
 {
-	int secret = 0;
-	if (this != player.get())
-		for (auto& card : m_cards)
-			if (card && card->IsPrivate())
-				secret += card->GetPoint();
+	int total = GetTotal(player);
+	int total_real = GetTotal(nullptr);
 	std::cout << GetUser() << "の手札(";
-	if (IsMe(player) || secret == 0)
-		std::cout << GetTotal();
+	if (total == total_real)
+		std::cout << total;
 	else
-		std::cout << GetTotal() - secret << "+?";
+		std::cout << total << "+?";
 	std::cout << "pt";
-	if (IsBust())
+	bool bust = IsBust();
+	if (bust)
 		std::cout << "[Bust]";
 	std::cout << "): ";
 	bool start = true;
@@ -26,31 +25,18 @@ void Player::Show(const std::shared_ptr<Player>& player)
 				start = false;
 			else
 				std::cout << ", ";
-			ShowCard(player, card);
+			card->Show(bust ? nullptr : player);
 		}
 	std::cout << std::endl;
 }
 
-bool Player::IsMe(const std::shared_ptr<Player>& player)
-{
-	return this == player.get();
-}
-
-void Player::ShowCard(const std::shared_ptr<Player>& player, const std::unique_ptr<Card>& card)
-{
-	if (IsMe(player))
-		card->ShowPrivate();
-	else
-		card->ShowPublic();
-}
-
-int Player::GetTotal()
+int Player::GetTotal(const std::shared_ptr<Player>& owner)
 {
 	int num_pending = 0;
 	int total = 0;
 	for (auto& card : m_cards)
 	{
-		int point = card->GetPoint();
+		int point = card->GetPoint(nullptr);
 		if (point < 0)
 			num_pending++;
 		else
@@ -58,17 +44,20 @@ int Player::GetTotal()
 	}
 	for (; num_pending > 0; num_pending--)
 	{
-		if (total + 11 > Game::BUST_POINT || num_pending > 1)
+		if (total + 11 > Blackjack::BUST_POINT || num_pending > 1)
 			total += 1;
 		else
 			total += 11;
 	}
+	for (auto& card : m_cards)
+		if (!card->IsVisible(owner))
+			total -= card->GetPoint(nullptr);
 	return total;
 }
 
 bool Player::IsBust()
 {
-	return GetTotal() > Game::BUST_POINT;
+	return GetTotal(nullptr) > Blackjack::BUST_POINT;
 }
 
 User& Player::GetUser()
@@ -78,27 +67,18 @@ User& Player::GetUser()
 
 void Player::AddCard(std::unique_ptr<Card>&& newcard)
 {
+	newcard->SetOwner(shared_from_this());
 	m_cards.push_back(std::move(newcard));
-}
-
-std::string DealerPlayer::GetName()
-{
-	return "ディーラー";
 }
 
 bool DealerPlayer::ChooseHit()
 {
-	return GetTotal() <= 16;
+	return GetTotal(nullptr) <= 16;
 }
 
 bool DealerPlayer::IsDealer()
 {
 	return true;
-}
-
-std::string NormalPlayer::GetName()
-{
-	return name;
 }
 
 bool NormalPlayer::ChooseHit()

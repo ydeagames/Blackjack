@@ -35,7 +35,7 @@ void Trump::Show()
 				start = false;
 			else
 				std::cout << ", ";
-			card->ShowPrivate();
+			card->Show(nullptr);
 		}
 	std::cout << std::endl;
 }
@@ -44,6 +44,9 @@ std::unique_ptr<Card> Trump::DrawCard()
 {
 	for (auto itr = m_cards.erase(m_cards.begin()); itr != m_cards.end(); itr = m_cards.erase(itr))
 		if (*itr)
+		{
+			(*itr)->SetOwner(nullptr);
 			return std::move(*itr);
+		}
 	throw std::logic_error("ŽRŽD‚ª‚ ‚è‚Ü‚¹‚ñ");
 }

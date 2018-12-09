@@ -7,7 +7,7 @@ const std::string Card::ranks[] = { "A", "2", "3", "4", "5", "6", "7", "8", "9",
 Card::Card(int suit, int rank)
 	: suit(suit)
 	, rank(rank)
-	, is_private(false)
+	, hidden(false)
 {
 }
 
@@ -16,22 +16,19 @@ Card::Card(int id)
 {
 }
 
-void Card::ShowPublic()
+void Card::Show(const std::shared_ptr<Player>& player)
 {
-	if (is_private)
+	if (!IsVisible(player))
 		std::cout << "?";
 	else
 		std::cout << suits[suit] << ranks[rank];
 }
 
-void Card::ShowPrivate()
-{
-	std::cout << suits[suit] << ranks[rank];
-}
-
 // ポイントを返す
-int Card::GetPoint()
+int Card::GetPoint(const std::shared_ptr<Player>& player)
 {
+	if (!IsVisible(player))
+		return 0;
 	if (rank >= 10)		// J Q K は10ポイント
 		return 10;
 	else if (rank == 0)	// A は1か11ポイント
@@ -39,12 +36,32 @@ int Card::GetPoint()
 	return rank + 1;
 }
 
-void Card::SetPrivate(bool hidden)
+void Card::SetOwner(const std::shared_ptr<Player>& _owner)
 {
-	is_private = hidden;
+	owner = _owner;
 }
 
-bool Card::IsPrivate()
+bool Card::IsOwner(const std::shared_ptr<Player>& player)
 {
-	return is_private;
+	if (!player)
+		return true;
+	auto ownerptr = owner.lock();
+	if (!ownerptr)
+		return true;
+	return player == ownerptr;
+}
+
+void Card::SetPrivate(bool _hidden)
+{
+	hidden = _hidden;
+}
+
+bool Card::IsHidden()
+{
+	return hidden;
+}
+
+bool Card::IsVisible(const std::shared_ptr<Player>& player)
+{
+	return !IsHidden() || IsOwner(player);
 }

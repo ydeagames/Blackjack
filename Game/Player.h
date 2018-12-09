@@ -3,15 +3,17 @@
 class User;
 class Card;
 
-class Player
+class Player : public std::enable_shared_from_this<Player>
 {
 protected:
 	std::shared_ptr<User> user;
 	std::vector<std::unique_ptr<Card>> m_cards;
 
-public:
+private:
 	Player(const std::shared_ptr<User>& user)
 		: user(user) {}
+
+public:
 	virtual ~Player() = default;
 
 public:
@@ -22,9 +24,7 @@ public:
 	User& GetUser();
 	void AddCard(std::unique_ptr<Card>&& newcard);
 	void Show(const std::shared_ptr<Player>& player);
-	bool IsMe(const std::shared_ptr<Player>& player);
-	void ShowCard(const std::shared_ptr<Player>& player, const std::unique_ptr<Card>& card);
-	int GetTotal();
+	int GetTotal(const std::shared_ptr<Player>& owner);
 	bool IsBust();
 };
 

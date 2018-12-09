@@ -25,14 +25,17 @@ int User::GetChip()
 	return chip;
 }
 
-void User::ShowChip()
+void User::ShowChip(bool show_before)
 {
 	std::cout << GetName() << "‚Ìƒ`ƒbƒv: ";
-	if (chip_before > 0)
-		std::cout << chip_before;
-	else
-		std::cout << "‚È‚µ";
-	std::cout << "¨";
+	if (show_before)
+	{
+		if (chip_before > 0)
+			std::cout << chip_before;
+		else
+			std::cout << "‚È‚µ";
+		std::cout << "¨";
+	}
 	if (chip > 0)
 		std::cout << chip;
 	else

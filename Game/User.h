@@ -23,7 +23,7 @@ public:
 	void AddChip(int score);
 	void SetChip(int score);
 	int GetChip();
-	void ShowChip();
+	void ShowChip(bool show_before = true);
 	void Commit();
 	int GetChipBefore();
 };

@@ -4,7 +4,7 @@
 #include "Card.h"
 #include "User.h"
 
-void Blackjack::Start()
+int Blackjack::Start()
 {
 	std::cout << "########## ブラックジャック ##########" << std::endl;
 
@@ -30,12 +30,17 @@ void Blackjack::Start()
 			{
 				int chip = player->GetUser()->GetChip();
 				int bet;
-				std::cout << "BET(チップ: " << chip << ")> ";
+				std::cout << "BET(チップ: " << chip << ", -1で終了)> ";
 				std::cin >> bet;
 				if (bet > chip)
 					std::cout << "チップが足りません" << std::endl;
-				if (bet <= 0)
+				if (bet == 0)
 					std::cout << "1チップ以上かける必要があります" << std::endl;
+				if (bet < 0)
+				{
+					std::cout << "ゲームを終了します";
+					return -1;
+				}
 				else
 				{
 					player->Bet(bet);
@@ -157,4 +162,5 @@ void Blackjack::Start()
 	}
 
 	std::cout << "####### ブラックジャックおわり #######" << std::endl;
+	return 0;
 }

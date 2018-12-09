@@ -17,5 +17,5 @@ public:
 		, playerUsers(playerUsers) {}
 
 public:
-	void Start();
+	int Start();
 };

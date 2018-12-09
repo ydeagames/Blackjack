@@ -5,10 +5,13 @@ class User;
 class Blackjack
 {
 public:
+	// バストのポイント
 	static const int BUST_POINT = 21;
 
 private:
+	// ディーラー
 	std::shared_ptr<User> dealerUser;
+	// 一般ピーポー
 	std::vector<std::shared_ptr<User>> playerUsers;
 
 public:
@@ -17,5 +20,6 @@ public:
 		, playerUsers(playerUsers) {}
 
 public:
+	// 試合開始
 	int Start();
 };

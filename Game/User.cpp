@@ -1,30 +1,36 @@
 #include "User.h"
 
+// 表示
 std::ostream& operator<<(std::ostream& os, const User& user)
 {
 	return os << user.name;
 }
 
+// 名前取得
 std::string User::GetName()
 {
 	return name;
 }
 
+// チップ追加
 void User::AddChip(int score)
 {
 	chip += score;
 }
 
+// チップセット
 void User::SetChip(int score)
 {
 	chip = score;
 }
 
+// チップを取得
 int User::GetChip()
 {
 	return chip;
 }
 
+// チップを表示
 void User::ShowChip(bool show_before)
 {
 	std::cout << GetName() << "のチップ: ";
@@ -45,11 +51,13 @@ void User::ShowChip(bool show_before)
 	std::cout << std::endl;
 }
 
+// コミット
 void User::Commit()
 {
 	chip_before = chip;
 }
 
+// 前回の試合のチップ
 int User::GetChipBefore()
 {
 	return chip_before;

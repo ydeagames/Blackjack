@@ -1,35 +1,33 @@
 #pragma once
 
+// ユーティリティ
 namespace utils
 {
+	// ループ
 	inline int loop(int x, int max)
 	{
 		return ((x % max) + max) % max;
 	}
 
+	// 範囲ループ
 	inline int loopRange(int x, int min, int max)
 	{
 		return ((x % max) + max) % max;
 	}
 
+	// ランダム
 	inline int rnd(int max)
 	{
 		return std::rand() % (max + 1);
 	}
 
+	// 範囲ランダム
 	inline int rndRange(int min, int max)
 	{
 		return rnd(max - min) + min;
 	}
 
-	inline int rndRangeIgnore(int min, int max, int ignore)
-	{
-		int rnd = rndRange(min, max - 1);
-		if (rnd >= ignore)
-			rnd++;
-		return rnd;
-	}
-
+	// スワップ関数 (std::swapと同じ)
 	template<class t>
 	void swap(t& a, t& b)
 	{

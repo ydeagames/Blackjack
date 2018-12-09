@@ -26,7 +26,7 @@ public:
 public:
 	void SetOwner(const std::shared_ptr<Player>& owner);		// 所有者をセット
 	bool IsOwner(const std::shared_ptr<Player>& player);		// 所有者か
-	void SetPrivate(bool hidden);								// 表向きにするか
+	void SetHidden(bool hidden);								// 表向きにするか
 	bool IsHidden();											// 裏向きか
 	bool IsVisible(const std::shared_ptr<Player>& player);		// 見ることができるか
 

@@ -27,6 +27,7 @@
     <ClInclude Include="Game\Deck.h" />
     <ClInclude Include="Game\User.h" />
     <ClInclude Include="Game\Utils.h" />
+    <ClInclude Include="Resources\Icon\Icon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\Blackjack.cpp" />
@@ -58,6 +59,12 @@
     <Media Include="Resources\Audio\cheer.wav" />
     <Media Include="Resources\Audio\fail.wav" />
     <Media Include="Resources\Audio\success.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Icon\Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\Icon\Icon.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9C5299E5-3C66-4B32-8F02-7ADDDDD52EDF}</ProjectGuid>

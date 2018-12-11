@@ -22,6 +22,7 @@
     <ClInclude Include="Game\Blackjack.h" />
     <ClInclude Include="Game\Card.h" />
     <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\MemoryLeakDetector.h" />
     <ClInclude Include="Game\pch.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\Deck.h" />

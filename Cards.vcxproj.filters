@@ -48,6 +48,9 @@
     <ClInclude Include="Resources\Icon\Icon.h">
       <Filter>リソース ファイル\アイコン</Filter>
     </ClInclude>
+    <ClInclude Include="Game\MemoryLeakDetector.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\Player.cpp">
